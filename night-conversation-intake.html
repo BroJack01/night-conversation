@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Night Conversation — A private hour, dedicated to you</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,400&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#14110e;
+    --bg-card:#1e1912;
+    --bg-card-hover:#262019;
+    --border:#332b21;
+    --text:#f0eae0;
+    --text-muted:#9c9284;
+    --gold:#d4a24c;
+    --ember:#b5541f;
+    --danger:#c1493b;
+    --radius:14px;
+  }
+
+  *{box-sizing:border-box;}
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+  }
+
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Work Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+
+  .wrap{
+    max-width:520px;
+    margin:0 auto;
+    padding:32px 20px 64px;
+  }
+
+  .brand{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom:6px;
+  }
+
+  .dot{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:var(--gold);
+    box-shadow:0 0 8px 2px rgba(212,162,76,0.5);
+    animation:breathe 3.4s ease-in-out infinite;
+    flex-shrink:0;
+    position:relative;
+    top:-2px;
+  }
+
+  @keyframes breathe{
+    0%,100%{opacity:0.55; box-shadow:0 0 6px 1px rgba(212,162,76,0.35);}
+    50%{opacity:1; box-shadow:0 0 12px 4px rgba(212,162,76,0.6);}
+  }
+
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:2rem;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+
+  .tagline{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:400;
+    color:var(--text-muted);
+    font-size:1.05rem;
+    margin:0 0 28px;
+  }
+
+  .step-label{
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    font-size:0.72rem;
+    color:var(--text-muted);
+    margin-bottom:14px;
+  }
+
+  .panel{display:none;}
+  .panel.active{display:block; animation:fadeIn 0.4s ease;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  .card{
+    background:var(--bg-card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px;
+    margin-bottom:16px;
+  }
+
+  .card h2{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.05rem;
+    margin:0 0 8px;
+    color:var(--gold);
+  }
+
+  .card p{
+    margin:0;
+    line-height:1.55;
+    color:var(--text);
+    font-size:0.94rem;
+  }
+
+  .card p + p{margin-top:8px;}
+
+  .check-row{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    padding:16px;
+    background:var(--bg-card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    margin-bottom:12px;
+    cursor:pointer;
+  }
+
+  .check-row input{
+    margin-top:2px;
+    width:18px;
+    height:18px;
+    accent-color:var(--gold);
+    flex-shrink:0;
+  }
+
+  .check-row span{font-size:0.92rem; line-height:1.45;}
+
+  label{
+    display:block;
+    font-size:0.85rem;
+    color:var(--text-muted);
+    margin-bottom:6px;
+    margin-top:20px;
+  }
+
+  label:first-of-type{margin-top:0;}
+
+  input[type="text"], input[type="email"], input[type="tel"], textarea{
+    width:100%;
+    background:var(--bg-card);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:13px 14px;
+    color:var(--text);
+    font-family:'Work Sans', sans-serif;
+    font-size:0.96rem;
+  }
+
+  input:focus, textarea:focus, .check-row:focus-within, .doorway:focus-visible{
+    outline:2px solid var(--gold);
+    outline-offset:2px;
+  }
+
+  textarea{min-height:110px; resize:vertical; line-height:1.5;}
+
+  ::placeholder{color:#6b6357;}
+
+  .field-hint{font-size:0.78rem; color:var(--text-muted); margin-top:5px;}
+
+  .doorways{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:8px;
+  }
+
+  .doorway{
+    background:var(--bg-card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:14px 12px;
+    text-align:left;
+    cursor:pointer;
+    color:var(--text);
+    font-family:'Work Sans', sans-serif;
+    font-size:0.86rem;
+    line-height:1.3;
+    transition:border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .doorway .icon{font-size:1.3rem; display:block; margin-bottom:6px;}
+
+  .doorway.selected{
+    border-color:var(--gold);
+    background:rgba(212,162,76,0.1);
+  }
+
+  .doorway:hover{background:var(--bg-card-hover);}
+
+  button.primary{
+    width:100%;
+    background:var(--ember);
+    color:#fff8ef;
+    border:none;
+    border-radius:12px;
+    padding:16px;
+    font-family:'Work Sans', sans-serif;
+    font-weight:600;
+    font-size:0.98rem;
+    cursor:pointer;
+    margin-top:24px;
+    transition:opacity 0.15s ease, transform 0.1s ease;
+  }
+
+  button.primary:active{transform:scale(0.99);}
+
+  button.primary:disabled{
+    background:#3a3025;
+    color:#847a68;
+    cursor:not-allowed;
+  }
+
+  button.whatsapp{
+    width:100%;
+    background:#25D366;
+    color:#0a1f14;
+    border:none;
+    border-radius:12px;
+    padding:16px;
+    font-weight:600;
+    font-size:0.98rem;
+    cursor:pointer;
+    margin-top:6px;
+    text-decoration:none;
+    display:block;
+    text-align:center;
+  }
+
+  .error-text{
+    color:var(--danger);
+    font-size:0.85rem;
+    margin-top:8px;
+    display:none;
+  }
+
+  .night-display{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.3rem;
+    color:var(--gold);
+    margin:4px 0 2px;
+  }
+
+  .spinner{
+    width:18px; height:18px;
+    border:2px solid rgba(255,255,255,0.3);
+    border-top-color:#fff8ef;
+    border-radius:50%;
+    animation:spin 0.7s linear infinite;
+    display:inline-block;
+    vertical-align:middle;
+    margin-right:8px;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .fine-print{
+    font-size:0.78rem;
+    color:var(--text-muted);
+    line-height:1.5;
+    margin-top:28px;
+    text-align:center;
+  }
+
+  .back-link{
+    display:inline-block;
+    color:var(--text-muted);
+    font-size:0.82rem;
+    margin-bottom:16px;
+    cursor:pointer;
+    text-decoration:underline;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="brand">
+    <span class="dot" aria-hidden="true"></span>
+    <h1>Night Conversation</h1>
+  </div>
+  <p class="tagline">A private hour, dedicated to you.</p>
+
+  <!-- STEP 1: CONSENT -->
+  <div class="panel active" id="panel-consent">
+    <div class="step-label">Before we begin</div>
+
+    <div class="card">
+      <h2>What this is</h2>
+      <p>A private, one-on-one conversation with Brother Jack — one hour, dedicated fully to you. It's a mentorship conversation, not therapy or clinical counseling.</p>
+    </div>
+
+    <div class="card">
+      <h2>Boundaries</h2>
+      <p>This space is held with professional conduct only. Romantic or sexual content has no place here, and a session will end immediately if this boundary is crossed.</p>
+    </div>
+
+    <div class="card">
+      <h2>Privacy</h2>
+      <p>What you share stays between us. The one exception: if you describe an immediate risk to your safety or someone else's, I will not stay silent about it.</p>
+    </div>
+
+    <div class="card">
+      <h2>If you're in crisis</h2>
+      <p>This is not an emergency service and response isn't immediate. If you're in danger right now, please contact your local emergency services or a crisis line first.</p>
+    </div>
+
+    <label class="check-row" for="consent18">
+      <input type="checkbox" id="consent18">
+      <span>I confirm I am 18 years of age or older.</span>
+    </label>
+
+    <label class="check-row" for="consentAgree">
+      <input type="checkbox" id="consentAgree">
+      <span>I have read and agree to what's above.</span>
+    </label>
+
+    <button class="primary" id="btnToIntake" disabled>Continue</button>
+  </div>
+
+  <!-- STEP 2: INTAKE -->
+  <div class="panel" id="panel-intake">
+    <span class="back-link" id="backToConsent">&larr; Back</span>
+    <div class="step-label">Step 1 of 2 — Tell me a little</div>
+
+    <label for="name">Your name (or an alias — whatever feels safe)</label>
+    <input type="text" id="name" placeholder="What should I call you?">
+
+    <label for="whatsapp">WhatsApp number</label>
+    <input type="tel" id="whatsapp" placeholder="e.g. +260 977 000 000">
+    <div class="field-hint">Include your country code. This is how we'll connect.</div>
+
+    <label for="email">Email <span style="color:var(--text-muted); font-weight:400;">(optional — for your payment receipt only)</span></label>
+    <input type="email" id="email" placeholder="you@example.com">
+
+    <label>What's weighing on you? <span style="color:var(--text-muted); font-weight:400;">(choose any that fit)</span></label>
+    <div class="doorways" id="doorways">
+      <button type="button" class="doorway" data-value="Weight I'm carrying alone"><span class="icon">🪨</span>Weight I'm carrying alone</button>
+      <button type="button" class="doorway" data-value="Relationship struggling"><span class="icon">💔</span>Relationship struggling</button>
+      <button type="button" class="doorway" data-value="Lost / don't know what's next"><span class="icon">🧭</span>Lost / don't know what's next</button>
+      <button type="button" class="doorway" data-value="Money pressure"><span class="icon">💰</span>Money pressure</button>
+      <button type="button" class="doorway" data-value="Family tension"><span class="icon">🏠</span>Family tension</button>
+      <button type="button" class="doorway" data-value="Grief or loss"><span class="icon">🕊️</span>Grief or loss</button>
+      <button type="button" class="doorway" data-value="Feeling unseen / unheard"><span class="icon">👁️</span>Feeling unseen / unheard</button>
+      <button type="button" class="doorway" data-value="Something else"><span class="icon">✍️</span>Something else</button>
+    </div>
+
+    <label for="situation">In your own words</label>
+    <textarea id="situation" placeholder="Tell me more about what you're going through..."></textarea>
+
+    <button class="primary" id="btnSubmit">Request my night</button>
+    <div class="error-text" id="intakeError"></div>
+  </div>
+
+  <!-- STEP 3: SUBMITTING -->
+  <div class="panel" id="panel-loading">
+    <div class="card" style="text-align:center; padding:40px 20px;">
+      <span class="spinner" style="border-top-color:var(--gold); border-color:rgba(212,162,76,0.25);"></span>
+      Finding your night...
+    </div>
+  </div>
+
+  <!-- STEP 4: CONFIRMATION -->
+  <div class="panel" id="panel-confirm">
+    <div class="step-label">Your night is held</div>
+    <div class="card">
+      <p>Your session is reserved for:</p>
+      <div class="night-display" id="nightText">—</div>
+      <p>22:30–23:30 CAT</p>
+    </div>
+
+    <div class="card">
+      <h2>To lock this slot</h2>
+      <p>Send the message below on WhatsApp. It includes the session fee (K50) and MoMo payment details. Once you've paid, send proof of payment in the same chat and your slot is confirmed.</p>
+    </div>
+
+    <a class="whatsapp" id="waLink" href="#" target="_blank" rel="noopener">Continue on WhatsApp</a>
+  </div>
+
+  <!-- STEP 5: FULLY BOOKED / ERROR -->
+  <div class="panel" id="panel-error">
+    <div class="card">
+      <h2 id="errorTitle">Something went wrong</h2>
+      <p id="errorBody">Please try again in a moment.</p>
+    </div>
+    <a class="whatsapp" id="fallbackWaLink" href="#" target="_blank" rel="noopener">Message Brother Jack directly</a>
+  </div>
+
+  <div class="fine-print">One private conversation, three nights a week. Sunday · Tuesday · Thursday.</div>
+
+</div>
+
+<script>
+  // ── CONFIGURE THESE TWO VALUES BEFORE DEPLOYING ──────────────────────────
+  const WORKER_URL = "https://YOUR-WORKER-SUBDOMAIN.workers.dev"; // your Cloudflare Worker relay URL
+  const FALLBACK_WHATSAPP_NUMBER = "260XXXXXXXXX"; // Brother Jack's WhatsApp number, digits only, country code, no +
+  // ──────────────────────────────────────────────────────────────────────
+
+  const panels = {
+    consent: document.getElementById('panel-consent'),
+    intake: document.getElementById('panel-intake'),
+    loading: document.getElementById('panel-loading'),
+    confirm: document.getElementById('panel-confirm'),
+    error: document.getElementById('panel-error')
+  };
+
+  function show(panelKey){
+    Object.values(panels).forEach(p => p.classList.remove('active'));
+    panels[panelKey].classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  // Consent gating
+  const consent18 = document.getElementById('consent18');
+  const consentAgree = document.getElementById('consentAgree');
+  const btnToIntake = document.getElementById('btnToIntake');
+
+  function refreshConsentButton(){
+    btnToIntake.disabled = !(consent18.checked && consentAgree.checked);
+  }
+  consent18.addEventListener('change', refreshConsentButton);
+  consentAgree.addEventListener('change', refreshConsentButton);
+
+  btnToIntake.addEventListener('click', () => show('intake'));
+  document.getElementById('backToConsent').addEventListener('click', () => show('consent'));
+
+  // Doorways (multi-select)
+  const selectedDoorways = new Set();
+  document.querySelectorAll('.doorway').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const val = btn.dataset.value;
+      if(selectedDoorways.has(val)){
+        selectedDoorways.delete(val);
+        btn.classList.remove('selected');
+      } else {
+        selectedDoorways.add(val);
+        btn.classList.add('selected');
+      }
+      primeSituationPlaceholder();
+    });
+  });
+
+  function primeSituationPlaceholder(){
+    const textarea = document.getElementById('situation');
+    if(selectedDoorways.size === 0){
+      textarea.placeholder = "Tell me more about what you're going through...";
+      return;
+    }
+    const list = Array.from(selectedDoorways).map(v => v.toLowerCase());
+    let joined;
+    if(list.length === 1){
+      joined = list[0];
+    } else {
+      joined = list.slice(0, -1).join(', ') + ' and ' + list[list.length - 1];
+    }
+    textarea.placeholder = "Tell me more about the " + joined + " you're carrying...";
+  }
+
+  // Submit
+  document.getElementById('btnSubmit').addEventListener('click', async () => {
+    const name = document.getElementById('name').value.trim();
+    const whatsapp = document.getElementById('whatsapp').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const situation = document.getElementById('situation').value.trim();
+    const errorEl = document.getElementById('intakeError');
+
+    if(!name || !whatsapp || !situation){
+      errorEl.textContent = "Please fill in your name, WhatsApp number, and a few words about what's going on.";
+      errorEl.style.display = 'block';
+      return;
+    }
+    errorEl.style.display = 'none';
+
+    show('loading');
+
+    try{
+      const res = await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          name, whatsapp, email,
+          doorways: Array.from(selectedDoorways),
+          situation,
+          consent18: true,
+          consentAgreed: true
+        })
+      });
+
+      const data = await res.json();
+
+      if(data.success){
+        document.getElementById('nightText').textContent = data.assignedNight;
+        document.getElementById('waLink').href = data.whatsappLink;
+        show('confirm');
+      } else if(data.error === 'FULLY_BOOKED'){
+        document.getElementById('errorTitle').textContent = "Every night is taken right now";
+        document.getElementById('errorBody').textContent = "The next 30 days are fully booked. New nights open every week — please check back soon, or reach out directly below.";
+        setFallbackLink();
+        show('error');
+      } else {
+        throw new Error(data.error || 'unknown');
+      }
+    } catch(err){
+      document.getElementById('errorTitle').textContent = "Something went wrong on our end";
+      document.getElementById('errorBody').textContent = "Please try again in a moment, or message Brother Jack directly.";
+      setFallbackLink();
+      show('error');
+    }
+  });
+
+  function setFallbackLink(){
+    const msg = encodeURIComponent("I tried to book a Night Conversation session but ran into an issue on the site.");
+    document.getElementById('fallbackWaLink').href = "https://wa.me/" + FALLBACK_WHATSAPP_NUMBER + "?text=" + msg;
+  }
+</script>
+
+</body>
+</html>
